@@ -14,16 +14,6 @@ services:
     networks:
       - backend
 
-  api:
-    build: ./backend/api
-    container_name: api
-    ports:
-      - "3000:3000"
-    depends_on:
-      - postgres
-    networks:
-      - backend
-
   bookings:
     build: ./backend/bookings
     container_name: bookings-service
@@ -33,6 +23,7 @@ services:
       DB_PASSWORD: postgres
       DB_NAME: item_storage
       DB_PORT: 5432
+      API_PORT: 4000
     ports:
       - "4000:4000"
     networks:

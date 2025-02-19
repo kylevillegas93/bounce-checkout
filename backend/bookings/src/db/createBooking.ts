@@ -1,10 +1,12 @@
+import { Request, Response } from 'express';
 import { PoolClient } from "pg";
 import { dbPool } from "./dbPool";
 import { CreateBookingRequest } from "../model/booking";
-import {v4 as uuidv4} from 'uuid';
+import { v4 as uuidv4 } from 'uuid';
 
-export const createBooking = async (bookingRequest: CreateBookingRequest): Promise<{ id: string }> => {
-  const { name, email, store_id, quantity, base_price } = bookingRequest;
+export const createBooking = async (req: Request, res: Response): Promise<void> => {
+  console.log(req);
+  const { name, email, store_id, quantity, base_price } = req.body as CreateBookingRequest;
   let dbClient: PoolClient | null = null;
 
   try {
@@ -35,7 +37,10 @@ export const createBooking = async (bookingRequest: CreateBookingRequest): Promi
 
     const bookingId = bookingResult.rows[0].id;
 
-    return { id: bookingId };
+    res.status(201).json({ id: bookingId });
+  } catch (error) {
+    console.error('Failed to create booking', error);
+    res.status(500);
   } finally {
     if (dbClient) dbClient.release();
   }

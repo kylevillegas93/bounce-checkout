@@ -11,5 +11,5 @@ app.post('/bookings', (req: express.Request, res: express.Response) => {
 });
 
 app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
+  console.log(`Bookings service listening on port ${port}`)
 });

@@ -4,7 +4,7 @@
 
 # Local developer setup
 Steps: 
-1. Install dependencies: typescript, nvm, node
+1. Install dependencies: docker, typescript, nvm, node
 2. Run `nvm use`
 3. To run the backend locally on localhost:4000, run `docker compose up --build`
 4. To run the frontend locally on localhost:3000, run `npm run dev` 

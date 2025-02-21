@@ -2,35 +2,46 @@
 
 import React, { useState } from 'react';
 
-const BookingForm = () => {
+const BookingForm = (
+  { 
+    storeName, 
+    pricePerBag, 
+    onSubmit,
+    retry
+  }: 
+  { 
+    storeName: string, 
+    pricePerBag: number,
+    onSubmit: ({ numberOfBags, name, email }: { numberOfBags: number, name: string, email: string}) => void,
+    retry: boolean
+  }) => {
   const [numberOfBags, setNumberOfBags] = useState(1);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [cardNumber, setCardNumber] = useState('');
 
-  const submitBooking = () => {
-    console.log('Booked!');
-    // TODO: call backend
-  }
-  
   const disableForm = !numberOfBags || !name || !email || !cardNumber;
 
+  const handleSubmit = () => {
+    onSubmit({ numberOfBags, name, email });
+  }
+  
+  // TODO: refactor - separate styling and cleanup spacing
+  // TODO: add more form validation/messaging designs
   return (
-    <form 
-      onSubmit={submitBooking} 
+    <div  
       style={{ 
         display: 'flex',
         flexDirection: 'column',
         gap: '10px',
         minWidth: '80%',
-        margin: '40px',
       }}
     >
       <span>Booking storage at:</span>
-      <strong>Cody’s Cookie Store</strong>
+      <strong>{storeName}</strong>
 
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '40px', marginBottom: '30px' }}>
-        <span style={{ display: 'flex', fontSize: '18px' }}>Number of bags</span>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', margin: '30px 0px 30px' }}>
+        <span style={{ fontSize: '18px' }}>Number of bags</span>
         <div style={{ display: 'flex', justifyContent: 'space-between', gap: '20px' }}>
           <button 
             type='button' 
@@ -88,36 +99,43 @@ const BookingForm = () => {
         onChange={(event) => setCardNumber(event.target.value)} 
       />
 
+      {retry && (
+        <div style={{ display: 'flex', flexDirection: 'column', marginTop: '50px' }}>
+          <span>Your booking has failed.</span>
+          <span>Please try again.</span>
+        </div>
+      )}
 
       <div style={{ 
           display: 'flex', 
           justifyContent: 'space-between', 
-          alignItems: 'center',
-          marginTop: '100px', 
+          marginTop: !retry ? '60px' : '10px', 
           borderTop: '1px solid #A9A9A9',
-          paddingTop: '30px'  
+          paddingTop: '30px',
+          flexGrow: 1
       }}>
-        <span style={{ fontSize: '14px' }}>
-          {numberOfBags} {numberOfBags === 1 ? 'bag' : 'bags'}
-          <br/>
-          <span style={{ fontWeight: 'bold', fontSize: '18px' }}>${(numberOfBags * 5.90).toFixed(2)}</span>
-        </span>
-        <button 
+        <div style={{ display: 'flex', flexDirection: 'column' }}>
+          <span style={{ fontSize: '14px' }}>{numberOfBags} {numberOfBags === 1 ? 'bag' : 'bags'}</span>
+          <span style={{ fontWeight: 'bold', fontSize: '18px' }}>{'$' + (numberOfBags * pricePerBag).toFixed(2)}</span>
+        </div>
+        
+        <button
+          onClick={handleSubmit}
           type='submit'
           disabled={disableForm}
           style={{
-            padding: '10px 20px',
+            padding: '5px 25px',
             borderRadius: '2px',
-            background: disableForm ? '#B2CEFF' : '#649DFF',
+            background: disableForm ? '#B2CEFF' : retry ? '#F54B23': '#649DFF',
             color: disableForm ? 'grey' : 'black',
             border: 'none',
             cursor: disableForm ? 'not-allowed' : 'pointer'
           }}
         >
-          Book
+          {retry ? 'Retry' : 'Book'}
         </button>
       </div>
-    </form>
+    </div>
   )
 }
 

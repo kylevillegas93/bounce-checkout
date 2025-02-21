@@ -1,7 +1,7 @@
 export interface CreateBookingRequest {
   name: string;
   email: string;
-  store_id: string;
+  storeId: string;
   quantity: number;
-  base_price: number;
+  basePrice: number;
 }
